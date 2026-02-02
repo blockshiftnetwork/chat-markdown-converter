@@ -249,3 +249,231 @@ it('handles multilisted content (bullets + numbered)', function () {
     expect($result)->toContain('First item');
     expect($result)->toContain('First numbered');
 });
+
+it('handles all heading levels', function () {
+    $markdown = "# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6";
+
+    $telegram = MarkdownConverter::toTelegram($markdown);
+    $whatsapp = MarkdownConverter::toWhatsApp($markdown);
+    $discord = MarkdownConverter::toDiscord($markdown);
+
+    expect($telegram)->toContain('H1');
+    expect($telegram)->toContain('H2');
+    expect($telegram)->toContain('H3');
+    expect($telegram)->toContain('H4');
+    expect($telegram)->toContain('H5');
+    expect($telegram)->toContain('H6');
+
+    expect($whatsapp)->toContain('H1');
+    expect($discord)->toContain('H1');
+});
+
+it('handles nested formatting in different platforms', function () {
+    $markdown = "**bold with _italic_ inside**";
+
+    $telegram = MarkdownConverter::toTelegram($markdown);
+    $whatsapp = MarkdownConverter::toWhatsApp($markdown);
+    $discord = MarkdownConverter::toDiscord($markdown);
+
+    expect($telegram)->toContain('<b>');
+    expect($telegram)->toContain('<i>');
+
+    expect($whatsapp)->toContain('*');
+    expect($discord)->toContain('**');
+});
+
+it('handles mixed markdown elements', function () {
+    $markdown = "# Title\n\n**Bold** text with `code` and *italic*.\n\n> A quote\n\n- List item\n\n[Link](https://example.com)";
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('Title');
+    expect($result)->toContain('<b>Bold</b>');
+    expect($result)->toContain('<code>code</code>');
+    expect($result)->toContain('<i>italic</i>');
+    expect($result)->toContain('A quote');
+    expect($result)->toContain('List item');
+    expect($result)->toContain('https://example.com');
+});
+
+it('handles inline HTML tags correctly', function () {
+    $markdown = '<strong>HTML strong</strong> and <em>HTML em</em>';
+
+    $telegram = MarkdownConverter::toTelegram($markdown);
+    $whatsapp = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($telegram)->toContain('HTML strong');
+    expect($telegram)->toContain('HTML em');
+    expect($whatsapp)->toContain('HTML strong');
+});
+
+it('handles multiple consecutive blockquotes', function () {
+    $markdown = "> First quote\n\n> Second quote\n\n> Third quote";
+
+    $result = MarkdownConverter::toDiscord($markdown);
+
+    expect($result)->toContain('First quote');
+    expect($result)->toContain('Second quote');
+    expect($result)->toContain('Third quote');
+});
+
+it('handles links with underscores in text', function () {
+    $markdown = '[link with underscores](https://example.com)';
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('link with underscores');
+    expect($result)->toContain('https://example.com');
+});
+
+it('handles code with special characters', function () {
+    $markdown = '`<html> & <body> "quotes"`';
+
+    $result = MarkdownConverter::toDiscord($markdown);
+
+    expect($result)->toContain('<html>');
+    expect($result)->toContain('&');
+    expect($result)->toContain('"quotes"');
+});
+
+it('handles tables with special characters', function () {
+    $markdown = "| Name | Value |\n|------|-------|\n| Test & More | 100% |\n| Special < > | \$50 |";
+
+    $result = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($result)->toContain('Name:');
+    expect($result)->toContain('Test & More');
+    expect($result)->toContain('100%');
+    expect($result)->toContain('Special');
+});
+
+it('handles malformed markdown gracefully', function () {
+    $markdown = "**Unclosed bold\n_Unclosed italic\n`Unclosed code";
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('Unclosed bold');
+    expect($result)->toContain('Unclosed italic');
+    expect($result)->toContain('Unclosed code');
+});
+
+it('handles multiple links in same paragraph', function () {
+    $markdown = 'Visit [link1](https://example1.com) and [link2](https://example2.com) for more info';
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('https://example1.com');
+    expect($result)->toContain('https://example2.com');
+});
+
+it('handles line breaks with double space', function () {
+    $markdown = "Line 1  \nLine 2  \nLine 3";
+
+    $result = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($result)->toContain('Line 1');
+    expect($result)->toContain('Line 2');
+    expect($result)->toContain('Line 3');
+});
+
+it('handles empty table rows', function () {
+    $markdown = "| Header |\n|--------|\n| Value |";
+
+    $result = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($result)->toContain('Header:');
+    expect($result)->toContain('Value');
+});
+
+it('handles code blocks with special characters', function () {
+    $markdown = "```php
+\$var = 'value';
+\$arr = [1, 2, 3];
+echo \$var;
+```";
+
+    $result = MarkdownConverter::toDiscord($markdown);
+
+    expect($result)->toContain('$var');
+    expect($result)->toContain('echo');
+});
+
+it('handles mixed bullet and numbered lists', function () {
+    $markdown = "- Bullet 1\n- Bullet 2\n\n1. Number 1\n2. Number 2\n\n- Bullet 3";
+
+    $result = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($result)->toContain('Bullet 1');
+    expect($result)->toContain('Number 1');
+    expect($result)->toContain('Bullet 3');
+});
+
+it('handles whitespace preservation in code', function () {
+    $markdown = "```\n    Indented line\nNot indented\n```";
+
+    $result = MarkdownConverter::toDiscord($markdown);
+
+    expect($result)->toContain('Indented line');
+    expect($result)->toContain('Not indented');
+});
+
+it('handles escaped markdown characters', function () {
+    $markdown = '\*\*Not Bold\*\* and \`Not Code\`';
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('Not Bold');
+    expect($result)->toContain('Not Code');
+});
+
+it('handles complex tables with multiple columns', function () {
+    $markdown = "| Col1 | Col2 | Col3 | Col4 |\n|------|------|------|------|\n| A1 | B1 | C1 | D1 |\n| A2 | B2 | C2 | D2 |";
+
+    $result = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($result)->toContain('Col1:');
+    expect($result)->toContain('A1');
+    expect($result)->toContain('B1');
+    expect($result)->toContain('C1');
+});
+
+it('handles bold with underscores in text', function () {
+    $markdown = "**text with underscores**";
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('<b>text with underscores</b>');
+});
+
+it('handles multiple consecutive spaces', function () {
+    $markdown = "Word1    Word2     Word3";
+
+    $result = MarkdownConverter::toWhatsApp($markdown);
+
+    expect($result)->toContain('Word1');
+    expect($result)->toContain('Word2');
+    expect($result)->toContain('Word3');
+});
+
+it('handles links with unicode characters', function () {
+    $markdown = '[中文链接](https://example.com/测试) and [日本語](https://example.com/テスト)';
+
+    $result = MarkdownConverter::toTelegram($markdown);
+
+    expect($result)->toContain('中文链接');
+    expect($result)->toContain('日本語');
+    expect($result)->toContain('https://example.com/测试');
+    expect($result)->toContain('https://example.com/テスト');
+});
+
+it('handles images in different platforms', function () {
+    $markdown = '![Image](https://example.com/img.png)';
+
+    $telegram = MarkdownConverter::toTelegram($markdown);
+    $whatsapp = MarkdownConverter::toWhatsApp($markdown);
+    $discord = MarkdownConverter::toDiscord($markdown);
+
+    expect($telegram)->toContain('https://example.com/img.png');
+    expect($whatsapp)->toContain('https://example.com/img.png');
+    expect($discord)->toContain('https://example.com/img.png');
+});
