@@ -8,6 +8,7 @@ class DiscordRenderer extends AbstractRenderer
     {
         return match ($block['type']) {
             'paragraph' => $this->renderParagraph($block['content']),
+            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
             'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
             'table' => $this->renderTable($block),
             'blockquote' => $this->renderBlockquote($block['content']),
@@ -28,8 +29,19 @@ class DiscordRenderer extends AbstractRenderer
         return $text;
     }
 
+    protected function renderHeader(string $content, int $level): string
+    {
+        return "**{$content}**";
+    }
+
     protected function renderParagraph(string $content): string
     {
+        $content = preg_replace_callback('/__BOLDITALIC__(.+?)__BOLDITALIC__/', fn ($m) => "***{$m[1]}***", $content);
+
+        $content = preg_replace_callback('/__HIGHLIGHT__(.+?)__HIGHLIGHT__/', fn ($m) => "**{$m[1]}**", $content);
+
+        $content = preg_replace('/!/', '', $content);
+
         $content = $this->convertLinks($content);
 
         return $content;

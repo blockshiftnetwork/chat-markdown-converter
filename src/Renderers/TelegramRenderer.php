@@ -8,6 +8,7 @@ class TelegramRenderer extends AbstractRenderer
     {
         return match ($block['type']) {
             'paragraph' => $this->renderParagraph($block['content']),
+            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
             'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
             'table' => $this->renderTable($block),
             'blockquote' => $this->renderBlockquote($block['content']),
@@ -21,16 +22,27 @@ class TelegramRenderer extends AbstractRenderer
         return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
+    protected function renderHeader(string $content, int $level): string
+    {
+        $content = $this->escapeText($content);
+
+        return "<b>{$content}</b>";
+    }
+
     protected function renderParagraph(string $content): string
     {
         $content = $this->escapeText($content);
         $content = $this->convertLinks($content);
 
+        $content = preg_replace_callback('/__BOLDITALIC__(.+?)__BOLDITALIC__/', fn ($m) => "<b><i>{$m[1]}</i></b>", $content);
+        $content = preg_replace_callback('/__HIGHLIGHT__(.+?)__HIGHLIGHT__/', fn ($m) => "<b>{$m[1]}</b>", $content);
         $content = preg_replace_callback('/~~(.+?)~~/', fn ($m) => "<s>{$m[1]}</s>", $content);
         $content = preg_replace_callback('/\*\*(.+?)\*\*/', fn ($m) => "<b>{$m[1]}</b>", $content);
         $content = preg_replace_callback('/\*(.+?)\*/', fn ($m) => "<i>{$m[1]}</i>", $content);
         $content = preg_replace_callback('/_(.+?)_/', fn ($m) => "<i>{$m[1]}</i>", $content);
         $content = preg_replace_callback('/`(.+?)`/', fn ($m) => "<code>{$m[1]}</code>", $content);
+
+        $content = preg_replace('/!/', '', $content);
 
         return $content;
     }
