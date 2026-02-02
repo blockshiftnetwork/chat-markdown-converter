@@ -45,7 +45,6 @@ it('finishes blockquote on empty line', function () {
     expect($parser->isInBlockquote())->toBeFalse();
 });
 
-
 it('resets parser state', function () {
     $parser = new BlockquoteParser;
     $parser->parseLine('> Test quote');

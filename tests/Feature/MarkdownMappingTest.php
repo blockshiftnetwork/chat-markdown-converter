@@ -17,7 +17,7 @@ it('converts headers to appropriate format for each platform', function () {
 });
 
 it('handles bold text correctly across platforms', function () {
-    $markdown = "**Q4 2025** showed **23%** growth";
+    $markdown = '**Q4 2025** showed **23%** growth';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -31,7 +31,7 @@ it('handles bold text correctly across platforms', function () {
 });
 
 it('handles italic text correctly across platforms', function () {
-    $markdown = "*23% YoY* and *quarterly growth*";
+    $markdown = '*23% YoY* and *quarterly growth*';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -43,7 +43,7 @@ it('handles italic text correctly across platforms', function () {
 });
 
 it('handles strikethrough text correctly across platforms', function () {
-    $markdown = "~~27% margin~~ was ~~incorrect~~";
+    $markdown = '~~27% margin~~ was ~~incorrect~~';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -55,7 +55,7 @@ it('handles strikethrough text correctly across platforms', function () {
 });
 
 it('handles inline code correctly across platforms', function () {
-    $markdown = "Active customers: `1,247` and `2,500`";
+    $markdown = 'Active customers: `1,247` and `2,500`';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -93,10 +93,10 @@ it('handles links correctly across platforms', function () {
 });
 
 it('converts tables to bullet points for non-table platforms', function () {
-    $markdown = "| Metric | Q3 | Q4 | Change |
+    $markdown = '| Metric | Q3 | Q4 | Change |
 |---------|----|----|--------|
 | Revenue | 36.7M | 45.2M | +23% |
-| EBITDA  | 9.5M  | 12.1M | +27% |";
+| EBITDA  | 9.5M  | 12.1M | +27% |';
 
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
     $telegram = MarkdownConverter::toTelegram($markdown);
@@ -121,11 +121,11 @@ it('handles numbered lists correctly', function () {
 });
 
 it('handles code blocks with language specification', function () {
-    $markdown = "```php
-function calculateGrowth(\$current, \$previous) {
-    return ((\$current - \$previous) / \$previous) * 100;
+    $markdown = '```php
+function calculateGrowth($current, $previous) {
+    return (($current - $previous) / $previous) * 100;
 }
-```";
+```';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -142,15 +142,15 @@ function calculateGrowth(\$current, \$previous) {
 });
 
 it('handles complex real-world scenario', function () {
-    $markdown = "# Executive Summary
+    $markdown = '# Executive Summary
 
 Q4 2025 showed **23%** growth in revenue. Key findings:
 
-- Revenue: \$45.2M (*+23% YoY*)
-- EBITDA: \$12.1M (~27% margin~)
+- Revenue: $45.2M (*+23% YoY*)
+- EBITDA: $12.1M (~27% margin~)
 - Active customers: `1,247` (+15%)
 
-> \"Growth was driven by geographic expansion\" - CFO
+> "Growth was driven by geographic expansion" - CFO
 
 More details in [our dashboard](https://example.com/q4-2025).
 
@@ -161,15 +161,15 @@ More details in [our dashboard](https://example.com/q4-2025).
 3. Launch secret product in March
 
 ```php
-function calculateGrowth(\$current, \$previous) {
-    return ((\$current - \$previous) / \$previous) * 100;
+function calculateGrowth($current, $previous) {
+    return (($current - $previous) / $previous) * 100;
 }
 ```
 
 | Metric | Q3 | Q4 | Change |
 |---------|----|----|--------|
 | Revenue | 36.7M | 45.2M | +23% |
-| EBITDA  | 9.5M  | 12.1M | +27% |";
+| EBITDA  | 9.5M  | 12.1M | +27% |';
 
     $result = MarkdownConverter::toTelegram($markdown);
 
@@ -193,7 +193,7 @@ it('chunks long messages correctly', function () {
 });
 
 it('handles emojis correctly', function () {
-    $markdown = "🚀 Rocket launch! 🔥 Hot! ✅ Done!";
+    $markdown = '🚀 Rocket launch! 🔥 Hot! ✅ Done!';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -205,7 +205,7 @@ it('handles emojis correctly', function () {
 });
 
 it('handles unicode characters correctly', function () {
-    $markdown = "Special characters: café, niño, 中文, 日本語";
+    $markdown = 'Special characters: café, niño, 中文, 日本語';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -269,7 +269,7 @@ it('handles all heading levels', function () {
 });
 
 it('handles nested formatting in different platforms', function () {
-    $markdown = "**bold with _italic_ inside**";
+    $markdown = '**bold with _italic_ inside**';
 
     $telegram = MarkdownConverter::toTelegram($markdown);
     $whatsapp = MarkdownConverter::toWhatsApp($markdown);
@@ -438,7 +438,7 @@ it('handles complex tables with multiple columns', function () {
 });
 
 it('handles bold with underscores in text', function () {
-    $markdown = "**text with underscores**";
+    $markdown = '**text with underscores**';
 
     $result = MarkdownConverter::toTelegram($markdown);
 
@@ -446,7 +446,7 @@ it('handles bold with underscores in text', function () {
 });
 
 it('handles multiple consecutive spaces', function () {
-    $markdown = "Word1    Word2     Word3";
+    $markdown = 'Word1    Word2     Word3';
 
     $result = MarkdownConverter::toWhatsApp($markdown);
 

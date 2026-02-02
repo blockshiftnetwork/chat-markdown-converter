@@ -165,18 +165,18 @@ it('preserves emojis', function () {
 it('renders blockquotes with > prefix', function () {
     $renderer = new DiscordRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('blockquote', ['content' => 'Test quote']);
- 
+
     $result = $renderer->render($ir);
- 
+
     expect($result)->toContain('> Test quote');
 });
 
 it('removes exclamation mark from image alt text', function () {
     $renderer = new DiscordRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => 'Alt Text (https://example.com/image.png)']);
- 
+
     $result = $renderer->render($ir);
- 
+
     expect($result)->toContain('[Alt Text](https://example.com/image.png)');
     expect($result)->not->toContain('!');
 });
@@ -184,13 +184,12 @@ it('removes exclamation mark from image alt text', function () {
 it('converts highlight to bold', function () {
     $renderer = new DiscordRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '__HIGHLIGHT__important__HIGHLIGHT__ text']);
- 
+
     $result = $renderer->render($ir);
- 
+
     expect($result)->toContain('**important**');
     expect($result)->not->toContain('__HIGHLIGHT__');
 });
-
 
 it('renders horizontal rules', function () {
     $renderer = new DiscordRenderer;
