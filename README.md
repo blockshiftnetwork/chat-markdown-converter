@@ -125,6 +125,7 @@ MarkdownConverter::parse($markdown)->withOptions([
 ### Platform-Specific Features
 
 #### Telegram (HTML Mode)
+
 - Bold: `<b>text</b>`
 - Italic: `<i>text</i>`
 - Strikethrough: `<s>text</s>`
@@ -137,6 +138,7 @@ MarkdownConverter::parse($markdown)->withOptions([
 - Task Lists: `- [x]` and `- [ ]` (native support)
 
 #### WhatsApp
+
 - Bold: `*text*` (single asterisk)
 - Italic: `_text_` (underscore)
 - Strikethrough: `~text~` (single tilde)
@@ -149,6 +151,7 @@ MarkdownConverter::parse($markdown)->withOptions([
 - Task Lists: `✅ task` (completed) and `⬜ task` (pending) with emojis
 
 #### Discord
+
 - Bold: `**text**`
 - Italic: `*text*`
 - Strikethrough: `~~text~~`
@@ -161,6 +164,7 @@ MarkdownConverter::parse($markdown)->withOptions([
 - Task Lists: `- [x]` and `- [ ]` (native support)
 
 #### Slack
+
 - Bold: `*text*` (single asterisk)
 - Strikethrough: `~text~` (single tilde)
 - Highlight: `*text*` (bold)
@@ -176,6 +180,7 @@ MarkdownConverter::parse($markdown)->withOptions([
 See [TODO.md](TODO.md) for a comprehensive list of planned features including:
 
 **Completed ✅**
+
 - Platform-specific link formatting
 - Table to bullet conversion
 - Headers support
@@ -184,6 +189,7 @@ See [TODO.md](TODO.md) for a comprehensive list of planned features including:
 - Nested/complex formatting
 
 **Planned 📋**
+
 - Telegram MarkdownV2 support
 - Additional platforms (Teams, Mattermost, Signal)
 
@@ -232,15 +238,6 @@ composer test
 composer format
 ```
 
-## Security Vulnerabilities
-
-
-Check out our [TODO.md](TODO.md) to see what features we're working on and what's planned for the future.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
 ## Credits
 
 - [Blockshift Network](https://github.com/blockshiftnetwork)
@@ -249,5 +246,3 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-
