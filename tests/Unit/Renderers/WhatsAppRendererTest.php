@@ -41,20 +41,20 @@ it('renders italic text with underscores directly', function () {
 
 it('renders nested bold and italic', function () {
     $renderer = new WhatsAppRenderer;
-    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '**_nested_**']);
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '__BOLDITALIC__nested__BOLDITALIC__']);
 
     $result = $renderer->render($ir);
 
-    expect($result)->toContain('*_nested_*');
+    expect($result)->toContain('_*nested*_');
 });
 
-it('removes strikethrough formatting', function () {
+it('renders strikethrough with single tilde', function () {
     $renderer = new WhatsAppRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '~~strike~~ text']);
 
     $result = $renderer->render($ir);
 
-    expect($result)->toContain('strike text');
+    expect($result)->toContain('~strike~');
     expect($result)->not->toContain('~~');
 });
 
@@ -93,7 +93,7 @@ it('renders links as plain text with URL', function () {
 
     $result = $renderer->render($ir);
 
-    expect($result)->toContain('text (https://example.com)');
+    expect($result)->toContain('text: https://example.com');
     expect($result)->not->toContain('[');
     expect($result)->not->toContain('<');
 });
@@ -169,8 +169,53 @@ it('renders blockquotes with emoji', function () {
 it('renders horizontal rules', function () {
     $renderer = new WhatsAppRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('horizontal_rule', []);
-
+ 
     $result = $renderer->render($ir);
-
+ 
     expect($result)->toContain('---');
 });
+
+it('converts completed task lists to checkmark emoji', function () {
+    $renderer = new WhatsAppRenderer;
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '- [x] Completed task']);
+ 
+    $result = $renderer->render($ir);
+ 
+    expect($result)->toContain('✅');
+    expect($result)->toContain('Completed task');
+    expect($result)->not->toContain('[x]');
+    expect($result)->not->toContain('- [x]');
+});
+
+it('converts pending task lists to white circle emoji', function () {
+    $renderer = new WhatsAppRenderer;
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '- [ ] Pending task']);
+ 
+    $result = $renderer->render($ir);
+ 
+    expect($result)->toContain('⬜');
+    expect($result)->toContain('Pending task');
+    expect($result)->not->toContain('[ ]');
+    expect($result)->not->toContain('- [ ]');
+});
+
+it('removes exclamation mark from image alt text', function () {
+    $renderer = new WhatsAppRenderer;
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => 'Alt Text (https://example.com/image.png)']);
+ 
+    $result = $renderer->render($ir);
+ 
+    expect($result)->toContain('Alt Text: https://example.com/image.png');
+    expect($result)->not->toContain('!');
+});
+
+it('converts highlight to bold', function () {
+    $renderer = new WhatsAppRenderer;
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '__HIGHLIGHT__important__HIGHLIGHT__ text']);
+ 
+    $result = $renderer->render($ir);
+ 
+    expect($result)->toContain('*important*');
+    expect($result)->not->toContain('__HIGHLIGHT__');
+});
+

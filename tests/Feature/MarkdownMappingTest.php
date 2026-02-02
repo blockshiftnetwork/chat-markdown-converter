@@ -87,7 +87,7 @@ it('handles links correctly across platforms', function () {
     $slack = MarkdownConverter::toSlack($markdown);
 
     expect($telegram)->toContain('<a href="https://example.com/q4-2025">See our dashboard</a>');
-    expect($whatsapp)->toContain('our dashboard (https://example.com/q4-2025)');
+    expect($whatsapp)->toContain('our dashboard: https://example.com/q4-2025');
     expect($discord)->toContain('[See our dashboard](https://example.com/q4-2025)');
     expect($slack)->toContain('<https://example.com/q4-2025|See our dashboard>');
 });

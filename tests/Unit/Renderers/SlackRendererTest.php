@@ -147,8 +147,29 @@ it('renders blockquotes with > prefix', function () {
 it('renders horizontal rules', function () {
     $renderer = new SlackRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('horizontal_rule', []);
-
+ 
     $result = $renderer->render($ir);
-
+ 
     expect($result)->toContain('---');
 });
+
+it('removes exclamation mark from image alt text', function () {
+    $renderer = new SlackRenderer;
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => 'Alt Text (https://example.com/image.png)']);
+ 
+    $result = $renderer->render($ir);
+ 
+    expect($result)->toContain('<https://example.com/image.png|Alt Text>');
+    expect($result)->not->toContain('!');
+});
+
+it('converts highlight to bold', function () {
+    $renderer = new SlackRenderer;
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '__HIGHLIGHT__important__HIGHLIGHT__ text']);
+ 
+    $result = $renderer->render($ir);
+ 
+    expect($result)->toContain('*important*');
+    expect($result)->not->toContain('__HIGHLIGHT__');
+});
+
