@@ -157,9 +157,9 @@ it('handles special characters correctly', function () {
 it('renders blockquotes with emoji', function () {
     $renderer = new TelegramRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('blockquote', ['content' => 'Test quote']);
- 
+
     $result = $renderer->render($ir);
- 
+
     expect($result)->toContain('💬');
     expect($result)->toContain('Test quote');
 });
@@ -167,9 +167,9 @@ it('renders blockquotes with emoji', function () {
 it('removes exclamation mark from image alt text', function () {
     $renderer = new TelegramRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => 'Alt Text (https://example.com/image.png)']);
- 
+
     $result = $renderer->render($ir);
- 
+
     expect($result)->toContain('Alt Text');
     expect($result)->toContain('https://example.com/image.png');
     expect($result)->not->toContain('!');
@@ -178,13 +178,12 @@ it('removes exclamation mark from image alt text', function () {
 it('converts highlight to bold', function () {
     $renderer = new TelegramRenderer;
     $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '__HIGHLIGHT__important__HIGHLIGHT__ text']);
- 
+
     $result = $renderer->render($ir);
- 
+
     expect($result)->toContain('<b>important</b>');
     expect($result)->not->toContain('__HIGHLIGHT__');
 });
-
 
 it('renders horizontal rules', function () {
     $renderer = new TelegramRenderer;

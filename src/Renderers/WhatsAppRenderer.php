@@ -26,9 +26,9 @@ class WhatsAppRenderer extends AbstractRenderer
     {
         $content = preg_replace_callback('/~~(.+?)~~/', fn ($m) => "~{$m[1]}~", $content);
 
-        $content = preg_replace_callback('/\*\*(.+?)\*\*/', fn ($matches) => "__BOLD__".$matches[1]."__BOLD__", $content);
+        $content = preg_replace_callback('/\*\*(.+?)\*\*/', fn ($matches) => '__BOLD__'.$matches[1].'__BOLD__', $content);
 
-        $content = preg_replace_callback('/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/', fn ($matches) => "__ITALIC__".$matches[1]."__ITALIC__", $content);
+        $content = preg_replace_callback('/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/', fn ($matches) => '__ITALIC__'.$matches[1].'__ITALIC__', $content);
 
         $content = preg_replace_callback('/__BOLDITALIC__(.+?)__BOLDITALIC__/', fn ($matches) => "_*{$matches[1]}*_", $content);
 
