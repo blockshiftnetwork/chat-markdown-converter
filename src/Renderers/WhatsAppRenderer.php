@@ -8,6 +8,7 @@ class WhatsAppRenderer extends AbstractRenderer
     {
         return match ($block['type']) {
             'paragraph' => $this->renderParagraph($block['content']),
+            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
             'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
             'table' => $this->renderTable($block),
             'blockquote' => $this->renderBlockquote($block['content']),
@@ -16,17 +17,34 @@ class WhatsAppRenderer extends AbstractRenderer
         };
     }
 
+    protected function renderHeader(string $content, int $level): string
+    {
+        return "*{$content}*";
+    }
+
     protected function renderParagraph(string $content): string
     {
-        $content = preg_replace_callback('/~~(.+?)~~/', fn ($m) => $m[1], $content);
+        $content = preg_replace_callback('/~~(.+?)~~/', fn ($m) => "~{$m[1]}~", $content);
 
         $content = preg_replace_callback('/\*\*(.+?)\*\*/', fn ($matches) => "__BOLD__".$matches[1]."__BOLD__", $content);
 
-        $content = preg_replace_callback('/_(.+?)_/', fn ($matches) => "__ITALIC__".$matches[1]."__ITALIC__", $content);
-        $content = preg_replace_callback('/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/', fn ($matches) => "_{$matches[1]}_", $content);
+        $content = preg_replace_callback('/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/', fn ($matches) => "__ITALIC__".$matches[1]."__ITALIC__", $content);
+
+        $content = preg_replace_callback('/__BOLDITALIC__(.+?)__BOLDITALIC__/', fn ($matches) => "_*{$matches[1]}*_", $content);
+
+        $content = preg_replace_callback('/__HIGHLIGHT__(.+?)__HIGHLIGHT__/', fn ($matches) => "*{$matches[1]}*", $content);
 
         $content = str_replace('__ITALIC__', '_', $content);
-        return str_replace('__BOLD__', '*', $content);
+        $content = str_replace('__BOLD__', '*', $content);
+
+        $content = preg_replace_callback('/(.+?) \((https?:\/\/[^\)]+)\)/', fn ($matches) => "{$matches[1]}: {$matches[2]}", $content);
+
+        $content = preg_replace('/!/', '', $content);
+
+        $content = preg_replace('/-\s+\[x\]\s*(.*)/', '✅ $1', $content);
+        $content = preg_replace('/-\s+\[\s\]\s*(.*)/', '⬜ $1', $content);
+
+        return $content;
     }
 
     protected function renderCodeBlock(string $content, ?string $lang = null): string
