@@ -53,6 +53,7 @@ final class Parser
         $this->tableParser->reset();
         $this->blockquoteParser->reset();
 
+        $markdown = $this->normalizeNewlines($markdown);
         $lines = explode("\n", $markdown);
         $buffer = '';
         $inCodeBlock = false;
@@ -227,5 +228,10 @@ final class Parser
     public function getBlockquoteParser(): BlockquoteParser
     {
         return $this->blockquoteParser;
+    }
+
+    private function normalizeNewlines(string $text): string
+    {
+        return str_replace(["\r\n", "\r"], "\n", $text);
     }
 }

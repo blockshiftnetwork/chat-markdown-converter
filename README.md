@@ -109,11 +109,15 @@ MarkdownConverter::parse($markdown)->withOptions([
 
 ### Currently Supported ✅
 
-- **Text Formatting**: Bold, italic, strikethrough, inline code
+- **Text Formatting**: Bold, italic, strikethrough, inline code, highlight
+- **Headers**: Markdown headings (# ## ###)
 - **Code Blocks**: Code blocks with language preservation
+- **Task Lists**: Checkbox support with emoji conversion (WhatsApp)
 - **Links**: Markdown link formatting
+- **Images**: Image formatting
 - **Lists**: Numbered and bullet lists
 - **Blockquotes**: Quote blocks
+- **Tables**: Auto-converted to bullet lists for non-table platforms
 - **Message Chunking**: Smart text splitting with safe breakpoints
 - **Unicode Support**: Full UTF-8 support including emojis
 - **Multiple Platforms**: Telegram, WhatsApp, Discord, Slack
@@ -124,33 +128,62 @@ MarkdownConverter::parse($markdown)->withOptions([
 - Bold: `<b>text</b>`
 - Italic: `<i>text</i>`
 - Strikethrough: `<s>text</s>`
+- Highlight: `<b>text</b>`
 - Inline Code: `<code>text</code>`
 - Code Blocks: `<pre>code</pre>`
+- Headers: `<b>text</b>` (bold)
+- Links: `<a href="url">text</a>`
+- Images: `<a href="url">text</a>` (without !)
+- Task Lists: `- [x]` and `- [ ]` (native support)
 
 #### WhatsApp
 - Bold: `*text*` (single asterisk)
 - Italic: `_text_` (underscore)
-- Strikethrough: Removed (not supported)
+- Strikethrough: `~text~` (single tilde)
+- Highlight: `*text*` (bold)
+- Inline Code: `` `text` `` (backticks)
 - Code Blocks: Triple backticks
+- Headers: `*text*` (bold, replaces # syntax)
+- Links: `text: url` (colon separator)
+- Images: `text: url` (without !)
+- Task Lists: `✅ task` (completed) and `⬜ task` (pending) with emojis
 
 #### Discord
 - Bold: `**text**`
 - Italic: `*text*`
 - Strikethrough: `~~text~~`
+- Highlight: `**text**` (bold)
+- Inline Code: `` `text` `` (backticks)
 - Code Blocks: Triple backticks with language
+- Headers: `**text**` (bold, replaces # syntax)
+- Links: `[text](url)` (markdown format)
+- Images: `[text](url)` (without !)
+- Task Lists: `- [x]` and `- [ ]` (native support)
 
 #### Slack
 - Bold: `*text*` (single asterisk)
 - Strikethrough: `~text~` (single tilde)
+- Highlight: `*text*` (bold)
+- Inline Code: `` `text` `` (backticks)
 - Code Blocks: Triple backticks with language
+- Headers: `*text*` (bold, replaces # syntax)
+- Links: `<url|text>` (Slack format)
+- Images: `<url|text>` (without !)
+- Task Lists: `- [x]` and `- [ ]` (native support)
 
 ### Roadmap 🚧
 
 See [TODO.md](TODO.md) for a comprehensive list of planned features including:
 
+**Completed ✅**
 - Platform-specific link formatting
 - Table to bullet conversion
+- Headers support
+- Highlight syntax
+- Image formatting improvements
 - Nested/complex formatting
+
+**Planned 📋**
 - Telegram MarkdownV2 support
 - Additional platforms (Teams, Mattermost, Signal)
 
@@ -164,7 +197,7 @@ composer test
 composer test-coverage
 ```
 
-**Current Test Status**: 39 passed, 6 skipped
+**Current Test Status**: 168 passed, 1 skipped
 
 ## Architecture
 
@@ -177,7 +210,8 @@ Markdown → Parser → IR → Renderer → Platform-Specific Format
 ### Components
 
 - **Parser**: Converts Markdown to IR
-- **Parsers**: Specialized parsers for code blocks, tables, links, styles
+- **HeaderParser**: Detects and parses markdown headers (# ## ###)
+- **Parsers**: Specialized parsers for code blocks, tables, links, styles, blockquotes, horizontal rules
 - **Renderers**: Platform-specific renderers (Telegram, WhatsApp, Discord, Slack)
 - **Support**: IR, TextChunker, Utf16Helper
 
@@ -198,7 +232,8 @@ composer test
 composer format
 ```
 
-## Roadmap
+## Security Vulnerabilities
+
 
 Check out our [TODO.md](TODO.md) to see what features we're working on and what's planned for the future.
 
