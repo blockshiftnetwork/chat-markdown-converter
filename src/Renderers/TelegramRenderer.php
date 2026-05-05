@@ -4,19 +4,6 @@ namespace Blockshift\ChatMarkdown\Renderers;
 
 class TelegramRenderer extends AbstractRenderer
 {
-    protected function renderBlock(array $block): string
-    {
-        return match ($block['type']) {
-            'paragraph' => $this->renderParagraph($block['content']),
-            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
-            'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
-            'table' => $this->renderTable($block),
-            'blockquote' => $this->renderBlockquote($block['content']),
-            'horizontal_rule' => $this->renderHorizontalRule(),
-            default => '',
-        };
-    }
-
     protected function escapeText(string $text): string
     {
         return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -41,8 +28,6 @@ class TelegramRenderer extends AbstractRenderer
         $content = preg_replace_callback('/\*(.+?)\*/', fn ($m) => "<i>{$m[1]}</i>", $content);
         $content = preg_replace_callback('/_(.+?)_/', fn ($m) => "<i>{$m[1]}</i>", $content);
         $content = preg_replace_callback('/`(.+?)`/', fn ($m) => "<code>{$m[1]}</code>", $content);
-
-        $content = preg_replace('/!/', '', $content);
 
         return $content;
     }
@@ -81,9 +66,7 @@ class TelegramRenderer extends AbstractRenderer
 
     protected function renderBlockquote(string $content): string
     {
-        $content = $this->escapeText($content);
-
-        return "💬 {$content}";
+        return '💬 '.$this->renderParagraph($content);
     }
 
     protected function renderHorizontalRule(): string

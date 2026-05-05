@@ -377,7 +377,7 @@ For platforms without native table support (Telegram, WhatsApp, Slack, Instagram
 We support the most common Markdown features used in AI responses: headings, code blocks, lists, links, images, blockquotes, horizontal rules, and text formatting. See the Supported Features section for details.
 
 ### What about message length limits?
-The `TextChunker` intelligently splits long messages at safe breakpoints (after sentences, paragraphs, or list items) while preserving formatting and avoiding broken markup.
+The `TextChunker` intelligently splits long messages at safe breakpoints (after sentences, paragraphs, or list items) while preserving formatting and avoiding broken markup. To land on a clean breakpoint, a chunk may exceed the requested `maxLength` by up to 50 characters; budget for that overshoot when choosing your limit (e.g. pass `maxLength: 4046` if you absolutely must stay under Telegram's 4096-char hard cap).
 
 ### Can I use this with any PHP version?
 This library requires PHP 8.3 or higher, taking advantage of modern PHP features like match expressions and readonly properties.

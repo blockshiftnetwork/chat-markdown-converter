@@ -3,6 +3,7 @@
 use Blockshift\ChatMarkdown\MarkdownConverter;
 use Blockshift\ChatMarkdown\Renderers\TelegramRenderer;
 use Blockshift\ChatMarkdown\Renderers\WhatsAppRenderer;
+use Blockshift\ChatMarkdown\Support\UnicodeStyler;
 
 it('can convert markdown to telegram', function () {
     $markdown = '**Hello** world';
@@ -129,6 +130,70 @@ it('handles images', function () {
     $result = MarkdownConverter::toTelegram($markdown);
 
     expect($result)->toContain('https://example.com/image.png');
+});
+
+it('preserves exclamation marks in plain prose for every platform', function () {
+    $markdown = 'Hello world! This is great!';
+
+    expect(MarkdownConverter::toTelegram($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toWhatsApp($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toDiscord($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toSlack($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toInstagram($markdown))->toContain('Hello world!');
+});
+
+it('strips exclamation mark from image markdown across platforms', function () {
+    $markdown = '![Alt](https://example.com/i.png)';
+
+    expect(MarkdownConverter::toTelegram($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toWhatsApp($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toDiscord($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toSlack($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toInstagram($markdown))->not->toContain('!');
+});
+
+it('processes inline formatting inside blockquotes for Telegram (HTML)', function () {
+    $result = MarkdownConverter::toTelegram('> Use **bold** and *italic* inside quotes');
+
+    expect($result)->toContain('<b>bold</b>');
+    expect($result)->toContain('<i>italic</i>');
+});
+
+it('processes inline formatting inside blockquotes for WhatsApp', function () {
+    $result = MarkdownConverter::toWhatsApp('> Use **bold** and *italic* inside quotes');
+
+    expect($result)->toContain('*bold*');
+    expect($result)->toContain('_italic_');
+});
+
+it('processes inline formatting inside blockquotes for Discord', function () {
+    $result = MarkdownConverter::toDiscord('> Use **bold** and `code` inside quotes');
+
+    expect($result)->toContain('**bold**');
+    expect($result)->toContain('`code`');
+});
+
+it('processes inline formatting inside blockquotes for Slack', function () {
+    $result = MarkdownConverter::toSlack('> Use **bold** and ~~strike~~ inside quotes');
+
+    expect($result)->toContain('*bold*');
+    expect($result)->toContain('~strike~');
+});
+
+it('converts links inside blockquotes for every platform', function () {
+    $markdown = '> [link](https://example.com)';
+
+    expect(MarkdownConverter::toTelegram($markdown))->toContain('<a href="https://example.com">link</a>');
+    expect(MarkdownConverter::toWhatsApp($markdown))->toContain('link: https://example.com');
+    expect(MarkdownConverter::toDiscord($markdown))->toContain('[link](https://example.com)');
+    expect(MarkdownConverter::toSlack($markdown))->toContain('<https://example.com|link>');
+    expect(MarkdownConverter::toInstagram($markdown))->toContain('link: https://example.com');
+});
+
+it('processes inline formatting inside blockquotes for Instagram', function () {
+    $result = MarkdownConverter::toInstagram('> Quoted **wow**');
+
+    expect($result)->toContain(UnicodeStyler::bold('wow'));
 });
 
 it('handles escaped characters', function () {

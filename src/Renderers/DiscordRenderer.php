@@ -4,19 +4,6 @@ namespace Blockshift\ChatMarkdown\Renderers;
 
 class DiscordRenderer extends AbstractRenderer
 {
-    protected function renderBlock(array $block): string
-    {
-        return match ($block['type']) {
-            'paragraph' => $this->renderParagraph($block['content']),
-            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
-            'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
-            'table' => $this->renderTable($block),
-            'blockquote' => $this->renderBlockquote($block['content']),
-            'horizontal_rule' => $this->renderHorizontalRule(),
-            default => '',
-        };
-    }
-
     protected function escapeText(string $text): string
     {
         $text = str_replace('\\', '\\\\', $text);
@@ -39,8 +26,6 @@ class DiscordRenderer extends AbstractRenderer
         $content = preg_replace_callback('/__BOLDITALIC__(.+?)__BOLDITALIC__/', fn ($m) => "***{$m[1]}***", $content);
 
         $content = preg_replace_callback('/__HIGHLIGHT__(.+?)__HIGHLIGHT__/', fn ($m) => "**{$m[1]}**", $content);
-
-        $content = preg_replace('/!/', '', $content);
 
         $content = $this->convertLinks($content);
 
@@ -81,7 +66,7 @@ class DiscordRenderer extends AbstractRenderer
 
     protected function renderBlockquote(string $content): string
     {
-        return "> {$content}";
+        return '> '.$this->renderParagraph($content);
     }
 
     protected function renderHorizontalRule(): string

@@ -4,19 +4,6 @@ namespace Blockshift\ChatMarkdown\Renderers;
 
 class WhatsAppRenderer extends AbstractRenderer
 {
-    protected function renderBlock(array $block): string
-    {
-        return match ($block['type']) {
-            'paragraph' => $this->renderParagraph($block['content']),
-            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
-            'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
-            'table' => $this->renderTable($block),
-            'blockquote' => $this->renderBlockquote($block['content']),
-            'horizontal_rule' => $this->renderHorizontalRule(),
-            default => '',
-        };
-    }
-
     protected function renderHeader(string $content, int $level): string
     {
         return "*{$content}*";
@@ -38,8 +25,6 @@ class WhatsAppRenderer extends AbstractRenderer
         $content = str_replace('__BOLD__', '*', $content);
 
         $content = preg_replace_callback('/(.+?) \((https?:\/\/[^\)]+)\)/', fn ($matches) => "{$matches[1]}: {$matches[2]}", $content);
-
-        $content = preg_replace('/!/', '', $content);
 
         $content = preg_replace('/-\s+\[x\]\s*(.*)/', '✅ $1', $content);
         $content = preg_replace('/-\s+\[\s\]\s*(.*)/', '⬜ $1', $content);
@@ -72,7 +57,7 @@ class WhatsAppRenderer extends AbstractRenderer
 
     protected function renderBlockquote(string $content): string
     {
-        return "💬 {$content}";
+        return '💬 '.$this->renderParagraph($content);
     }
 
     protected function renderHorizontalRule(): string

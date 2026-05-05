@@ -25,7 +25,48 @@ abstract class AbstractRenderer implements RendererContract
         return $output;
     }
 
-    abstract protected function renderBlock(array $block): string;
+    protected function renderBlock(array $block): string
+    {
+        return match ($block['type']) {
+            'paragraph' => $this->renderParagraph($block['content']),
+            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
+            'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
+            'table' => $this->renderTable($block),
+            'blockquote' => $this->renderBlockquote($block['content']),
+            'horizontal_rule' => $this->renderHorizontalRule(),
+            default => '',
+        };
+    }
+
+    protected function renderParagraph(string $content): string
+    {
+        return $content;
+    }
+
+    protected function renderHeader(string $content, int $level): string
+    {
+        return $content;
+    }
+
+    protected function renderCodeBlock(string $content, ?string $lang = null): string
+    {
+        return $content;
+    }
+
+    protected function renderTable(array $data): string
+    {
+        return '';
+    }
+
+    protected function renderBlockquote(string $content): string
+    {
+        return "> {$content}";
+    }
+
+    protected function renderHorizontalRule(): string
+    {
+        return '---';
+    }
 
     protected function escapeText(string $text): string
     {

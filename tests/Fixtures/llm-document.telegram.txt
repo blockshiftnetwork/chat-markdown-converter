@@ -1,0 +1,41 @@
+<b>Project Status: Q2 2026</b>
+
+<b>Overview</b>
+
+We just shipped the <b>payments rewrite</b> and <i>cut p99 latency</i> by <b>58%</b>. <b><i>Huge win!</i></b> Backend codebase down <s>12,500</s> to 9,800 LOC.
+
+<b>Highlights</b>
+
+- Migrated to event-sourced ledger
+- Replaced <code>legacy/billing.php</code> with stateless service
+- 99.97% uptime over the rolling 30 days
+
+<b>Tasks for next sprint</b>
+
+- [x] Land observability dashboards
+- [x] Cut over EU region
+- [ ] Backfill Q1 reconciliations
+- [ ] Author postmortem for the March incident
+
+<b>Performance</b>
+
+• Metric: p50
+• Before: 180ms
+• After: 42ms
+• Metric: p99
+• Before: 2400ms
+• After: 1010ms
+
+<b>Code sample</b>
+
+<pre>function settle(Invoice $invoice): Receipt
+{
+    $ledger-&gt;record($invoice);
+    return Receipt::for($invoice);
+}</pre>
+
+💬 Reliability is not a feature — it&apos;s a <i>prerequisite</i>.
+
+---
+
+<a href="https://wiki.example.com/q2-2026">Read the full report at the wiki</a><a href="https://img.example.com/dash.png"> and see the dashboard dashboard</a>.
