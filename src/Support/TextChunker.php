@@ -6,6 +6,11 @@ final class TextChunker
 {
     private const SAFE_BREAKPOINTS = [' ', "\n", "\t", '.', ',', ';', ':', '-', '!', '?', ')', ']', '}', '"', "'"];
 
+    /**
+     * Maximum number of characters a chunk is allowed to exceed `maxLength` by
+     * in order to land on a safe breakpoint instead of mid-word. Callers that
+     * must respect a hard cap should pass `maxLength = hardCap - 50`.
+     */
     private const MAX_CHUNK_OVERSHOOT = 50;
 
     public static function chunk(string $text, int $maxLength, string $encoding = 'UTF-8'): array
