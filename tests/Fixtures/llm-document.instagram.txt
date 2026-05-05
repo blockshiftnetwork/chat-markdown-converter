@@ -1,0 +1,43 @@
+𝗣𝗿𝗼𝗷𝗲𝗰𝘁 𝗦𝘁𝗮𝘁𝘂𝘀: 𝗤𝟮 𝟮𝟬𝟮𝟲
+
+𝗢𝘃𝗲𝗿𝘃𝗶𝗲𝘄
+
+We just shipped the 𝗽𝗮𝘆𝗺𝗲𝗻𝘁𝘀 𝗿𝗲𝘄𝗿𝗶𝘁𝗲 and 𝘤𝘶𝘵 𝘱99 𝘭𝘢𝘵𝘦𝘯𝘤𝘺 by 𝟱𝟴%. 𝙃𝙪𝙜𝙚 𝙬𝙞𝙣! Backend codebase down 1̶2̶,̶5̶0̶0̶ to 9,800 LOC.
+
+𝗛𝗶𝗴𝗵𝗹𝗶𝗴𝗵𝘁𝘀
+
+• Migrated to event-sourced ledger
+• Replaced 𝚕𝚎𝚐𝚊𝚌𝚢/𝚋𝚒𝚕𝚕𝚒𝚗𝚐.𝚙𝚑𝚙 with stateless service
+• 99.97% uptime over the rolling 30 days
+
+𝗧𝗮𝘀𝗸𝘀 𝗳𝗼𝗿 𝗻𝗲𝘅𝘁 𝘀𝗽𝗿𝗶𝗻𝘁
+
+✅ Land observability dashboards
+✅ Cut over EU region
+⬜ Backfill Q1 reconciliations
+⬜ Author postmortem for the March incident
+
+𝗣𝗲𝗿𝗳𝗼𝗿𝗺𝗮𝗻𝗰𝗲
+
+• 𝗠𝗲𝘁𝗿𝗶𝗰: p50
+• 𝗕𝗲𝗳𝗼𝗿𝗲: 180ms
+• 𝗔𝗳𝘁𝗲𝗿: 42ms
+• 𝗠𝗲𝘁𝗿𝗶𝗰: p99
+• 𝗕𝗲𝗳𝗼𝗿𝗲: 2400ms
+• 𝗔𝗳𝘁𝗲𝗿: 1010ms
+
+𝗖𝗼𝗱𝗲 𝘀𝗮𝗺𝗽𝗹𝗲
+
+━━━━━━━━━━━━━━━━
+𝚏𝚞𝚗𝚌𝚝𝚒𝚘𝚗 𝚜𝚎𝚝𝚝𝚕𝚎(𝙸𝚗𝚟𝚘𝚒𝚌𝚎 $𝚒𝚗𝚟𝚘𝚒𝚌𝚎): 𝚁𝚎𝚌𝚎𝚒𝚙𝚝
+{
+    $𝚕𝚎𝚍𝚐𝚎𝚛->𝚛𝚎𝚌𝚘𝚛𝚍($𝚒𝚗𝚟𝚘𝚒𝚌𝚎);
+    𝚛𝚎𝚝𝚞𝚛𝚗 𝚁𝚎𝚌𝚎𝚒𝚙𝚝::𝚏𝚘𝚛($𝚒𝚗𝚟𝚘𝚒𝚌𝚎);
+}
+━━━━━━━━━━━━━━━━
+
+❝ Reliability is not a feature — it's a 𝘱𝘳𝘦𝘳𝘦𝘲𝘶𝘪𝘴𝘪𝘵𝘦. ❞
+
+━━━━━━━━━━━━━━━━
+
+Read the full report at the wiki: https://wiki.example.com/q2-2026 and see the dashboard dashboard: https://img.example.com/dash.png.
