@@ -8,7 +8,7 @@
 |[![Tests](https://img.shields.io/github/actions/workflow/status/blockshiftnetwork/chat-markdown-converter/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/blockshiftnetwork/chat-markdown-converter/actions/workflows/run-tests.yml)
 |[![Total Downloads](https://img.shields.io/packagist/dt/blockshiftnetwork/chat-markdown-converter.svg?style=flat-square)](https://packagist.org/packages/blockshiftnetwork/chat-markdown-converter)
 
-Convert AI-generated Markdown to WhatsApp, Telegram, Discord and Slack formats using an Intermediate Representation (IR). Perfect for converting LLM responses to chat-friendly formats.
+Convert AI-generated Markdown to WhatsApp, Telegram, Discord, Slack and Instagram formats using an Intermediate Representation (IR). Perfect for converting LLM responses to chat-friendly formats.
 
 This PHP library transforms ChatGPT, Claude, GPT-5, and other AI model outputs into platform-specific markup. It handles code blocks, tables, lists, links, and rich text formatting while maintaining readability across all supported platforms.
 
@@ -16,7 +16,7 @@ This PHP library transforms ChatGPT, Claude, GPT-5, and other AI model outputs i
 
 - Fluent API with chainable method calls
 - Clean architecture using the Intermediate Representation pattern for extensibility
-- Comprehensive test coverage with 168 passing tests (Pest)
+- Comprehensive test coverage with 200+ passing tests (Pest)
 - Platform-specific rendering optimized for each chat platform
 - Smart message chunking that splits text at safe breakpoints
 - Zero external dependencies, lightweight implementation
@@ -24,7 +24,7 @@ This PHP library transforms ChatGPT, Claude, GPT-5, and other AI model outputs i
 ## Use Cases
 
 ### AI Chatbots & Virtual Assistants
-Send formatted responses from OpenAI, Anthropic, or other LLM APIs directly to users via their preferred messaging platform. Ensure code blocks, tables, and lists render correctly across Telegram, WhatsApp, Discord, and Slack.
+Send formatted responses from OpenAI, Anthropic, or other LLM APIs directly to users via their preferred messaging platform. Ensure code blocks, tables, and lists render correctly across Telegram, WhatsApp, Discord, Slack, and Instagram.
 
 ### Customer Support Automation
 Automate support workflows by converting AI-generated help articles and documentation into chat-friendly formats. Preserve formatting while delivering concise, readable responses in your customers' channels.
@@ -33,7 +33,7 @@ Automate support workflows by converting AI-generated help articles and document
 Integrate with CI/CD pipelines, monitoring systems, or alerting platforms to send formatted logs, error messages, or status updates to team channels. Convert Markdown reports to platform-appropriate syntax automatically.
 
 ### Content Distribution Systems
-Distribute newsletters, summaries, or generated content across multiple platforms simultaneously. Write once in Markdown and automatically convert to Telegram HTML, WhatsApp text, Discord markdown, or Slack mrkdwn.
+Distribute newsletters, summaries, or generated content across multiple platforms simultaneously. Write once in Markdown and automatically convert to Telegram HTML, WhatsApp text, Discord markdown, Slack mrkdwn, or Instagram-ready Unicode captions.
 
 ### Educational Platforms
 Convert AI-generated tutorials, code examples, and learning materials into appropriate formats for students across different communication channels. Keep code snippets and syntax highlighting functional.
@@ -61,7 +61,7 @@ composer require blockshiftnetwork/chat-markdown-converter
 ## Why Choose This Library?
 
 ### Platform-Aware Formatting
-Unlike naive Markdown-to-text converters, this library understands each platform's unique limitations and formatting rules. Telegram uses HTML tags, WhatsApp uses asterisk-based formatting, Discord and Slack have their own markdown variants - we handle all these differences automatically.
+Unlike naive Markdown-to-text converters, this library understands each platform's unique limitations and formatting rules. Telegram uses HTML tags, WhatsApp uses asterisk-based formatting, Discord and Slack have their own markdown variants, and Instagram requires Unicode Mathematical Alphanumeric Symbols since it has no native markup at all - we handle all these differences automatically.
 
 ### Intermediate Representation Architecture
 By parsing Markdown into an abstract IR first, we ensure consistent behavior across all platforms. This clean architecture makes it easy to add new platforms or customize rendering logic without modifying the core parser.
@@ -74,7 +74,7 @@ Automatically converts complex Markdown features to platform-compatible formats:
 - Links transform to each platform's expected format
 
 ### Production-Ready Reliability
-Comprehensive test coverage (168+ tests) ensures consistent behavior across edge cases. Handle special characters, nested formatting, mixed content types, and Unicode/emoji support with confidence.
+Comprehensive test coverage (200+ tests) ensures consistent behavior across edge cases. Handle special characters, nested formatting, mixed content types, and Unicode/emoji support with confidence.
 
 ### Developer Experience
 Simple, intuitive API with fluent method chaining. Convert in one line with static methods or take full control with the flexible parser options. Zero learning curve for Markdown developers.
@@ -120,6 +120,9 @@ $discord = MarkdownConverter::toDiscord($markdown);
 
 // Slack (mrkdwn format)
 $slack = MarkdownConverter::toSlack($markdown);
+
+// Instagram (Unicode-substituted plain text — captions, bios, comments)
+$instagram = MarkdownConverter::toInstagram($markdown, maxLength: 2200);
 ```
 
 ### Fluent API
@@ -202,7 +205,7 @@ MarkdownConverter::parse($markdown)->withOptions([
 - Tables: Auto-converted to bullet lists for non-table platforms
 - Message Chunking: Smart text splitting with safe breakpoints
 - Unicode Support: Full UTF-8 support including emojis
-- Multiple Platforms: Telegram, WhatsApp, Discord, Slack
+- Multiple Platforms: Telegram, WhatsApp, Discord, Slack, Instagram
 
 ### Platform-Specific Features
 
@@ -257,6 +260,28 @@ MarkdownConverter::parse($markdown)->withOptions([
 - Images: `<url|text>` (without !)
 - Task Lists: `- [x]` and `- [ ]` (native support)
 
+#### Instagram
+
+Instagram has no native rich-text formatting in any surface (captions, bios, comments, DMs, story overlays, Reels descriptions). The renderer substitutes ASCII letters and digits with characters from Unicode's Mathematical Alphanumeric Symbols block so the output renders with the expected visual weight when pasted into Instagram.
+
+- Bold: Sans-serif bold Unicode glyphs (e.g. `b` becomes `𝗯`)
+- Italic: Sans-serif italic Unicode glyphs (digits remain plain — Unicode has no italic digits)
+- Bold Italic: Sans-serif bold-italic Unicode glyphs
+- Strikethrough: Combining long stroke overlay `U+0336` after each character
+- Highlight: Sans-serif bold (Instagram has no highlight equivalent)
+- Inline Code: Monospace Unicode glyphs (e.g. `c` becomes `𝚌`)
+- Code Blocks: Monospace body wrapped above and below with a heavy horizontal rule (`━━━━━━━━━━━━━━━━`); triple-backticks paste verbatim on Instagram so they're not used
+- Headers: Sans-serif bold (regardless of `#` level)
+- Links: `text: url` (Instagram captions don't auto-link `http(s)://` URLs)
+- Images: `alt: url` (the `!` prefix is stripped)
+- Blockquotes: `❝ quote ❞` (typographic quotation marks)
+- Horizontal Rule: `━━━━━━━━━━━━━━━━` (heavy box-drawing line)
+- Task Lists: `✅` (completed) and `⬜` (pending) with emojis
+- Bullet Lists: Leading `-` replaced with `•` for visual polish
+- Tables: Converted to bullet points with bold headers (Instagram has no table support)
+
+> **Accessibility note:** Mathematical Alphanumeric Symbols are read as separate, decontextualized characters by screen readers (e.g. `𝗯𝗼𝗹𝗱` is announced as "Mathematical Sans-Serif Bold B, Mathematical Sans-Serif Bold O…"). When accessibility matters more than visual emphasis, post the original Markdown body without running it through the Instagram renderer.
+
 ### Roadmap
 
 **Completed**
@@ -275,17 +300,17 @@ MarkdownConverter::parse($markdown)->withOptions([
 
 ## Platform Comparison
 
-| Feature | Telegram | WhatsApp | Discord | Slack |
-|---------|----------|----------|---------|-------|
-| Format Type | HTML | Text | Markdown | mrkdwn |
-| Bold | `<b>` | `*text*` | `**text**` | `*text*` |
-| Italic | `<i>` | `_text_` | `*text*` | `_text_` |
-| Code | `<code>` | `` ` `` | `` ` `` | `` ` `` |
-| Code Blocks | `<pre>` | Triple backticks | Triple backticks | Triple backticks |
-| Strikethrough | `<s>` | `~text~` | `~~text~~` | `~text~` |
-| Links | `<a href>` | `text: url` | `[text](url)` | `<url\|text>` |
-| Tables | Not supported | Not supported | Native support | Not supported |
-| Max Message Length | 4096 chars | 4096 chars | 2000 chars | 40000 chars |
+| Feature | Telegram | WhatsApp | Discord | Slack | Instagram |
+|---------|----------|----------|---------|-------|-----------|
+| Format Type | HTML | Text | Markdown | mrkdwn | Unicode plain text |
+| Bold | `<b>` | `*text*` | `**text**` | `*text*` | Unicode sans-serif bold |
+| Italic | `<i>` | `_text_` | `*text*` | `_text_` | Unicode sans-serif italic |
+| Code | `<code>` | `` ` `` | `` ` `` | `` ` `` | Unicode monospace |
+| Code Blocks | `<pre>` | Triple backticks | Triple backticks | Triple backticks | Monospace + `━` rules |
+| Strikethrough | `<s>` | `~text~` | `~~text~~` | `~text~` | Combining `U+0336` |
+| Links | `<a href>` | `text: url` | `[text](url)` | `<url\|text>` | `text: url` |
+| Tables | Not supported | Not supported | Native support | Not supported | Not supported |
+| Max Message Length | 4096 chars | 4096 chars | 2000 chars | 40000 chars | 2200 chars (caption) |
 
 ## Testing
 
@@ -297,7 +322,7 @@ composer test
 composer test-coverage
 ```
 
-**Current Test Status**: 168 passed, 1 skipped
+**Current Test Status**: 206 passed, 1 skipped
 
 ## Architecture
 
@@ -312,7 +337,7 @@ Markdown → Parser → IR → Renderer → Platform-Specific Format
 - Parser: Converts Markdown to IR
 - HeaderParser: Detects and parses markdown headers (# ## ###)
 - Parsers: Specialized parsers for code blocks, tables, links, styles, blockquotes, horizontal rules
-- Renderers: Platform-specific renderers (Telegram, WhatsApp, Discord, Slack)
+- Renderers: Platform-specific renderers (Telegram, WhatsApp, Discord, Slack, Instagram)
 - Support: IR, TextChunker
 
 ## Contributing
@@ -346,7 +371,7 @@ The IR pattern provides better separation of concerns and extensibility. Parse o
 Yes! Extend the `AbstractRenderer` class to create custom renderers. The parser provides a structured IR that you can transform into any format you need.
 
 ### How does table conversion work?
-For platforms without native table support (Telegram, WhatsApp, Slack), tables are automatically converted to hierarchical bullet lists, preserving the structure and readability.
+For platforms without native table support (Telegram, WhatsApp, Slack, Instagram), tables are automatically converted to hierarchical bullet lists, preserving the structure and readability.
 
 ### Does this library support all Markdown features?
 We support the most common Markdown features used in AI responses: headings, code blocks, lists, links, images, blockquotes, horizontal rules, and text formatting. See the Supported Features section for details.
@@ -358,7 +383,7 @@ The `TextChunker` intelligently splits long messages at safe breakpoints (after 
 This library requires PHP 8.3 or higher, taking advantage of modern PHP features like match expressions and readonly properties.
 
 ### Is this suitable for production use?
-Yes! The library has comprehensive test coverage (168+ tests) and is actively maintained. It's designed for performance and reliability in production environments.
+Yes! The library has comprehensive test coverage (200+ tests) and is actively maintained. It's designed for performance and reliability in production environments.
 
 ## Optimization Tips
 

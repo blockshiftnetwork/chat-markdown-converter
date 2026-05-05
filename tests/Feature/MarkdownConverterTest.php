@@ -1,6 +1,8 @@
 <?php
 
 use Blockshift\ChatMarkdown\MarkdownConverter;
+use Blockshift\ChatMarkdown\Renderers\TelegramRenderer;
+use Blockshift\ChatMarkdown\Renderers\WhatsAppRenderer;
 
 it('can convert markdown to telegram', function () {
     $markdown = '**Hello** world';
@@ -32,14 +34,14 @@ it('can convert markdown to slack', function () {
 
 it('supports fluent api', function () {
     $markdown = '**Hello** world';
-    $result = MarkdownConverter::parse($markdown)->using(new Blockshift\ChatMarkdown\Renderers\TelegramRenderer)->render();
+    $result = MarkdownConverter::parse($markdown)->using(new TelegramRenderer)->render();
 
     expect($result)->toContain('<b>Hello</b>');
 });
 
 it('supports options', function () {
     $markdown = "| Header |\n| --- |\n| Content |";
-    $result = MarkdownConverter::parse($markdown)->using(new Blockshift\ChatMarkdown\Renderers\WhatsAppRenderer)->render();
+    $result = MarkdownConverter::parse($markdown)->using(new WhatsAppRenderer)->render();
 
     expect($result)->toContain('Header');
     expect($result)->toContain('Content');
