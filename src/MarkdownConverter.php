@@ -4,6 +4,7 @@ namespace Blockshift\ChatMarkdown;
 
 use Blockshift\ChatMarkdown\Renderers\Contracts\RendererContract;
 use Blockshift\ChatMarkdown\Renderers\DiscordRenderer;
+use Blockshift\ChatMarkdown\Renderers\InstagramRenderer;
 use Blockshift\ChatMarkdown\Renderers\SlackRenderer;
 use Blockshift\ChatMarkdown\Renderers\TelegramRenderer;
 use Blockshift\ChatMarkdown\Renderers\WhatsAppRenderer;
@@ -41,6 +42,11 @@ final class MarkdownConverter
     public static function toSlack(string $markdown, ?int $maxLength = null): string|array
     {
         return self::parse($markdown)->using(new SlackRenderer)->render($maxLength);
+    }
+
+    public static function toInstagram(string $markdown, ?int $maxLength = null): string|array
+    {
+        return self::parse($markdown)->using(new InstagramRenderer)->render($maxLength);
     }
 
     private function __construct(

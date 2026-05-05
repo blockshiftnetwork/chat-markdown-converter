@@ -1,6 +1,6 @@
 {
     "name": "blockshiftnetwork/chat-markdown-converter",
-    "description": "Convert AI-generated Markdown to WhatsApp, Telegram, Discord and Slack compatible formats using an Intermediate Representation (IR).",
+    "description": "Convert AI-generated Markdown to WhatsApp, Telegram, Discord, Slack and Instagram compatible formats using an Intermediate Representation (IR).",
     "keywords": [
         "blockshiftnetwork",
         "chat-markdown-converter"
