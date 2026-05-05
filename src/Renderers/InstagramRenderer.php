@@ -70,8 +70,6 @@ class InstagramRenderer extends AbstractRenderer
             $content
         );
 
-        $content = preg_replace('/!/', '', $content);
-
         $content = preg_replace('/-\s+\[x\]\s*(.*)/', '✅ $1', $content);
         $content = preg_replace('/-\s+\[\s\]\s*(.*)/', '⬜ $1', $content);
 

@@ -39,8 +39,6 @@ class WhatsAppRenderer extends AbstractRenderer
 
         $content = preg_replace_callback('/(.+?) \((https?:\/\/[^\)]+)\)/', fn ($matches) => "{$matches[1]}: {$matches[2]}", $content);
 
-        $content = preg_replace('/!/', '', $content);
-
         $content = preg_replace('/-\s+\[x\]\s*(.*)/', '✅ $1', $content);
         $content = preg_replace('/-\s+\[\s\]\s*(.*)/', '⬜ $1', $content);
 

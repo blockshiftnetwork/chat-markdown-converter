@@ -131,6 +131,26 @@ it('handles images', function () {
     expect($result)->toContain('https://example.com/image.png');
 });
 
+it('preserves exclamation marks in plain prose for every platform', function () {
+    $markdown = 'Hello world! This is great!';
+
+    expect(MarkdownConverter::toTelegram($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toWhatsApp($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toDiscord($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toSlack($markdown))->toContain('Hello world!');
+    expect(MarkdownConverter::toInstagram($markdown))->toContain('Hello world!');
+});
+
+it('strips exclamation mark from image markdown across platforms', function () {
+    $markdown = '![Alt](https://example.com/i.png)';
+
+    expect(MarkdownConverter::toTelegram($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toWhatsApp($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toDiscord($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toSlack($markdown))->not->toContain('!');
+    expect(MarkdownConverter::toInstagram($markdown))->not->toContain('!');
+});
+
 it('handles escaped characters', function () {
     $markdown = '\\*not bold\\* and \\_not italic\\_';
     $result = MarkdownConverter::toTelegram($markdown);

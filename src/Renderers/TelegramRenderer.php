@@ -42,8 +42,6 @@ class TelegramRenderer extends AbstractRenderer
         $content = preg_replace_callback('/_(.+?)_/', fn ($m) => "<i>{$m[1]}</i>", $content);
         $content = preg_replace_callback('/`(.+?)`/', fn ($m) => "<code>{$m[1]}</code>", $content);
 
-        $content = preg_replace('/!/', '', $content);
-
         return $content;
     }
 

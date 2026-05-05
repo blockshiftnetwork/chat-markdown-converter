@@ -40,8 +40,6 @@ class DiscordRenderer extends AbstractRenderer
 
         $content = preg_replace_callback('/__HIGHLIGHT__(.+?)__HIGHLIGHT__/', fn ($m) => "**{$m[1]}**", $content);
 
-        $content = preg_replace('/!/', '', $content);
-
         $content = $this->convertLinks($content);
 
         return $content;

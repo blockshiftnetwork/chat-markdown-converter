@@ -24,6 +24,6 @@ final class LinkParser
 
     private function formatImage(string $alt, string $url): string
     {
-        return "!{$alt} ({$url})";
+        return "{$alt} ({$url})";
     }
 }

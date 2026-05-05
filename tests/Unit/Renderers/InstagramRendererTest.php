@@ -82,14 +82,20 @@ it('renders links as text colon url', function () {
     expect($result)->toContain('Site: https://example.com');
 });
 
-it('strips exclamation mark from image alt text', function () {
+it('renders parser-emitted image as plain link without exclamation mark', function () {
     $renderer = new InstagramRenderer;
-    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => '!Alt (https://example.com/img.png)']);
+    $ir = IntermediateRepresentation::empty()->addBlock('paragraph', ['content' => 'Alt (https://example.com/img.png)']);
 
     $result = $renderer->render($ir);
 
     expect($result)->toContain('Alt: https://example.com/img.png');
     expect($result)->not->toContain('!');
+});
+
+it('preserves natural exclamation marks in prose', function () {
+    $result = MarkdownConverter::toInstagram('Hello world!');
+
+    expect($result)->toContain('Hello world!');
 });
 
 it('renders headers as sans-serif bold regardless of level', function () {
