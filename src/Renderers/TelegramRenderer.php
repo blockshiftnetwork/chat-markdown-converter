@@ -79,9 +79,7 @@ class TelegramRenderer extends AbstractRenderer
 
     protected function renderBlockquote(string $content): string
     {
-        $content = $this->escapeText($content);
-
-        return "💬 {$content}";
+        return '💬 '.$this->renderParagraph($content);
     }
 
     protected function renderHorizontalRule(): string

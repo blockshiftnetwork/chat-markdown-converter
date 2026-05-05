@@ -116,7 +116,7 @@ final class Parser
 
                 $blockquoteResult = $this->blockquoteParser->parseLine($line);
                 if ($blockquoteResult !== null) {
-                    $ir = $ir->addBlock('blockquote', $blockquoteResult);
+                    $ir = $ir->addBlock('blockquote', $this->processInlineForBlockquote($blockquoteResult));
                 }
 
                 continue;
@@ -125,7 +125,7 @@ final class Parser
             if ($this->blockquoteParser->isInBlockquote()) {
                 $blockquoteResult = $this->blockquoteParser->parseLine($line);
                 if ($blockquoteResult !== null) {
-                    $ir = $ir->addBlock('blockquote', $blockquoteResult);
+                    $ir = $ir->addBlock('blockquote', $this->processInlineForBlockquote($blockquoteResult));
                 }
 
                 continue;
@@ -174,12 +174,29 @@ final class Parser
         if ($this->blockquoteParser->isInBlockquote()) {
             $blockquoteResult = $this->blockquoteParser->finishBlockquote();
             if ($blockquoteResult !== null) {
-                $ir = $ir->addBlock('blockquote', $blockquoteResult);
+                $ir = $ir->addBlock('blockquote', $this->processInlineForBlockquote($blockquoteResult));
             }
             $this->blockquoteParser->reset();
         }
 
         return $ir;
+    }
+
+    private function processInlineForBlockquote(array $blockquoteResult): array
+    {
+        $content = $blockquoteResult['content'] ?? '';
+
+        if ($this->options['parse_links']) {
+            $content = $this->linkParser->parse($content);
+        }
+
+        if ($this->options['parse_styles']) {
+            $content = $this->styleParser->parse($content);
+        }
+
+        $blockquoteResult['content'] = $content;
+
+        return $blockquoteResult;
     }
 
     public function withOptions(array $options): self

@@ -107,7 +107,7 @@ class InstagramRenderer extends AbstractRenderer
 
     protected function renderBlockquote(string $content): string
     {
-        return "❝ {$content} ❞";
+        return '❝ '.$this->renderParagraph($content).' ❞';
     }
 
     protected function renderHorizontalRule(): string
