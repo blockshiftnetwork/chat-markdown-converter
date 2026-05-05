@@ -4,19 +4,6 @@ namespace Blockshift\ChatMarkdown\Renderers;
 
 class TelegramRenderer extends AbstractRenderer
 {
-    protected function renderBlock(array $block): string
-    {
-        return match ($block['type']) {
-            'paragraph' => $this->renderParagraph($block['content']),
-            'header' => $this->renderHeader($block['content'], $block['level'] ?? 1),
-            'code' => $this->renderCodeBlock($block['content'], $block['lang'] ?? null),
-            'table' => $this->renderTable($block),
-            'blockquote' => $this->renderBlockquote($block['content']),
-            'horizontal_rule' => $this->renderHorizontalRule(),
-            default => '',
-        };
-    }
-
     protected function escapeText(string $text): string
     {
         return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
