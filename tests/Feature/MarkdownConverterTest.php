@@ -3,6 +3,7 @@
 use Blockshift\ChatMarkdown\MarkdownConverter;
 use Blockshift\ChatMarkdown\Renderers\TelegramRenderer;
 use Blockshift\ChatMarkdown\Renderers\WhatsAppRenderer;
+use Blockshift\ChatMarkdown\Support\UnicodeStyler;
 
 it('can convert markdown to telegram', function () {
     $markdown = '**Hello** world';
@@ -192,7 +193,7 @@ it('converts links inside blockquotes for every platform', function () {
 it('processes inline formatting inside blockquotes for Instagram', function () {
     $result = MarkdownConverter::toInstagram('> Quoted **wow**');
 
-    expect($result)->toContain(\Blockshift\ChatMarkdown\Support\UnicodeStyler::bold('wow'));
+    expect($result)->toContain(UnicodeStyler::bold('wow'));
 });
 
 it('handles escaped characters', function () {
