@@ -2,8 +2,20 @@
     "name": "blockshiftnetwork/chat-markdown-converter",
     "description": "Convert AI-generated Markdown to WhatsApp, Telegram, Discord, Slack and Instagram compatible formats using an Intermediate Representation (IR).",
     "keywords": [
+        "ai",
+        "chat",
+        "chatgpt",
         "blockshiftnetwork",
-        "chat-markdown-converter"
+        "chat-markdown-converter",
+        "discord",
+        "instagram",
+        "laravel",
+        "llm",
+        "markdown",
+        "php",
+        "slack",
+        "telegram",
+        "whatsapp"
     ],
     "homepage": "https://github.com/blockshiftnetwork/chat-markdown-converter",
     "license": "MIT",
