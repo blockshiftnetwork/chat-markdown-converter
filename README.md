@@ -4,9 +4,9 @@
   <img src="assets/card.png" alt="Chat Markdown Converter Card" width="800">
 </p>
 
-|[![Latest Version on Packagist](https://img.shields.io/packagist/v/blockshiftnetwork/chat-markdown-converter.svg?style=flat-square)](https://packagist.org/packages/blockshiftnetwork/chat-markdown-converter)
-|[![Tests](https://img.shields.io/github/actions/workflow/status/blockshiftnetwork/chat-markdown-converter/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/blockshiftnetwork/chat-markdown-converter/actions/workflows/run-tests.yml)
-|[![Total Downloads](https://img.shields.io/packagist/dt/blockshiftnetwork/chat-markdown-converter.svg?style=flat-square)](https://packagist.org/packages/blockshiftnetwork/chat-markdown-converter)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/blockshiftnetwork/chat-markdown-converter.svg?style=flat-square)](https://packagist.org/packages/blockshiftnetwork/chat-markdown-converter)
+[![Tests](https://img.shields.io/github/actions/workflow/status/blockshiftnetwork/chat-markdown-converter/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/blockshiftnetwork/chat-markdown-converter/actions/workflows/run-tests.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/blockshiftnetwork/chat-markdown-converter.svg?style=flat-square)](https://packagist.org/packages/blockshiftnetwork/chat-markdown-converter)
 
 Convert AI-generated Markdown to WhatsApp, Telegram, Discord, Slack and Instagram formats using an Intermediate Representation (IR). Perfect for converting LLM responses to chat-friendly formats.
 
@@ -43,6 +43,9 @@ Transform documentation and wiki content from Markdown sources into chat-appropr
 
 ### Notification Systems
 Build notification services that send formatted alerts, summaries, and reports from AI analysis tools. Convert complex data presentations into simple, readable messages on any platform.
+
+### Laravel Applications
+Use the package inside Laravel jobs, notifications, controllers, or queued bot handlers when an application needs to deliver AI-generated Markdown through chat channels without manually rewriting the same response for each platform.
 
 ### Multi-Platform Content Management
 Manage content in a single Markdown format while automatically adapting output for different chat platforms' unique formatting requirements and limitations.
@@ -123,6 +126,17 @@ $slack = MarkdownConverter::toSlack($markdown);
 
 // Instagram (Unicode-substituted plain text — captions, bios, comments)
 $instagram = MarkdownConverter::toInstagram($markdown, maxLength: 2200);
+```
+
+### In a Laravel Notification or Job
+
+```php
+use Blockshift\ChatMarkdown\MarkdownConverter;
+
+$message = MarkdownConverter::toSlack($markdown);
+
+// Send $message through your preferred Laravel notification, queue job,
+// bot SDK, webhook client, or chat integration.
 ```
 
 ### Fluent API
