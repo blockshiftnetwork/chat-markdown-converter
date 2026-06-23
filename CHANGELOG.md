@@ -2,6 +2,14 @@
 
 All notable changes to `Chat Markdown Converter` will be documented in this file.
 
+## v0.0.4 - 2026-06-23
+
+### What's Changed
+
+* Improve package promotion metadata and Laravel usage notes by @AlexR1712 in https://github.com/blockshiftnetwork/chat-markdown-converter/pull/8
+
+**Full Changelog**: https://github.com/blockshiftnetwork/chat-markdown-converter/compare/v0.0.3...v0.0.4
+
 ## v0.0.3 - 2026-05-06
 
 ### What's Changed
